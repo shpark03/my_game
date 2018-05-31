@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- This is based on DillingerLee's great template here:
+https://github.com/Team-Code/KA_Offline -->
+<html> 
+ <head>
+    <title>Processing.JS inside Webpages: Template</title> 
+</head>
+ <body>
+ <H1>Make It Rain with Math.random() and Math.floor() function</h1>
+    <p align="center"> 
+	<!--This draws the Canvas on the webpage -->
+    </p>
+ </body>
+ 
+ <!-- Run all the JavaScript stuff -->
+ <!-- Include the processing.js library -->
+ <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+<!--  <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> --> 
+<!--  <script src="position.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.dom.min.js"></script>
+
+ <script>
+   var positions;
+function preload() {
+	var url ="positions.json";
+//	loadJSON(url, positions, ,function(err){
+//		positions = [ {x:5, y:0}, {x:50, y:0}, {x:100, y:0}, {x:150, y:0}, {x:200, y:0},
+//    		{x:250, y:0}, {x:300, y:0}, {x:350, y:0}, {x:390, y:0} ];
+//		});
+//        positions = loadJSON(url);
+//	alert(JSON.stringify(positions));
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+              positions = JSON.parse(this.responseText);
+       }else {
+              positions = [ {x:5, y:0}, {x:50, y:0}, {x:100, y:0}, {x:150, y:0}, {x:200, y:0},
+              {x:250, y:0}, {x:300, y:0}, {x:350, y:0}, {x:390, y:0} ];
+	}
+    };
+    xhttp.open("GET", "/game/positions.json", true);
+    xhttp.send(); 
+	}
+function setup() {
+  createCanvas(400, 400);
+}
+
+        
+        // ProgramCodeGoesHere
+		//var xPositions = [5,50,100,150,200,250,300,350,390];
+		//var yPositions = [0,0,0,0,0,0,0,0,0];
+
+function init() {
+    positions = [ {x:5, y:0}, {x:50, y:0}, {x:100, y:0}, {x:150, y:0}, {x:200, y:0},
+        {x:250, y:0}, {x:300, y:0}, {x:350, y:0}, {x:390, y:0} ];
+}
+
+function draw(){
+    		background(204, 247, 255);
+
+    		for (var i = 0; i < positions.length; i++) {
+        		noStroke();
+        		fill(0, 200, 255);
+        		ellipse(positions[i].x, positions[i].y, 10, 10);
+        		positions[i].y += Math.floor(Math.random() * 5)+1;
+        		if (positions[i].y > 400) {
+            		positions[i].y = 0;
+        		}
+    		}
+    
+}
+
+function keyPressed() {
+  var varJSON = JSON.stringify(positions);
+  var xhttp = new XMLHttpRequest();
+  switch (keyCode) {
+    case 115:
+      alert(varJSON);
+      xhttp.open("GET", "/game/save/?data="+varJSON, true);
+      xhttp.send();
+      break;
+    case 83:
+      alert(varJSON);
+      xhttp.open("GET", "/game/save/?data="+varJSON, true);
+      xhttp.send();
+      break;
+    case 105:
+      init();
+      break;
+    case 73:
+      init();
+      break;
+  }
+}
+    // Get the canvas that Processing-js will use
+    //var canvas = document.getElementById("mycanvas"); 
+    // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
+    //var processingInstance = new Processing(canvas, sketchProc); 
+ </script>
+
+</html>
